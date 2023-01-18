@@ -16,7 +16,7 @@ struct HomeView: View {
                 .ignoresSafeArea()
             
             if showLocationSeachView {
-                LocationSearchView()
+                LocationSearchView(showLocationSearchView: $showLocationSeachView)
             }
             else {
                 LocationSearchActivationView()
