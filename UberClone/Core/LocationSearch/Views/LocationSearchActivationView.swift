@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+/// Produces the Search Activation View
+///
+/// ```
+/// LocationSearchActivationView()
+/// It is a view used to search locations.
+/// ```
 struct LocationSearchActivationView: View {
     var body: some View {
         HStack{
