@@ -9,10 +9,22 @@ import Foundation
 import SwiftUI
 import MapKit
 
+/// Produce a custom map view that includes `coordinators and paths`.
+///
+/// ```
+/// UberMapViewRepresentable()
+/// ```
+///
+/// - Parameters:
+///     -None
+///
+/// - Returns: An  `UberMapViewRepresentable Object`.
 struct UberMapViewRepresentable: UIViewRepresentable {
     let mapView = MKMapView()
+    let locationManager = LocationManager()
     
     func makeUIView(context: Context) -> some UIView {
+        mapView.delegate = context.coordinator
         mapView.isRotateEnabled = false
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
@@ -30,6 +42,19 @@ struct UberMapViewRepresentable: UIViewRepresentable {
 }
 
 extension UberMapViewRepresentable {
+    
+    
+    /// Produce a custom map coordinator that represents a  `coordinate` on the mapview.
+    ///
+    /// ```
+    /// MapCoordinator(parent:)
+    /// It sets the user's location at the center of the map view and starts updating the users location.
+    /// ```
+    ///
+    /// - Parameters:
+    ///     -parent: The parent UberMapViewRepresentable.
+    ///
+    /// - Returns: An  `MapCoordinator Object`.
     class MapCoordinator : NSObject, MKMapViewDelegate {
         let parent : UberMapViewRepresentable
         
@@ -38,7 +63,17 @@ extension UberMapViewRepresentable {
             super.init()
         }
         
+        func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+            let region = MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude),
+                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+            
+            parent.mapView.setRegion(region, animated: true)
+        }
+        
+        
     }
+    
 }
 
 
