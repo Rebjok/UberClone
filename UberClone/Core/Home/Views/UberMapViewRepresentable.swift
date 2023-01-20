@@ -21,7 +21,6 @@ import MapKit
 /// - Returns: An  `UberMapViewRepresentable Object`.
 struct UberMapViewRepresentable: UIViewRepresentable {
     let mapView = MKMapView()
-    let locationManager = LocationManager()
     
     @Binding var mapState : MapViewState
     @EnvironmentObject var locationViewModel : LocationSearchViewModel
@@ -35,7 +34,6 @@ struct UberMapViewRepresentable: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
-        print("DEBUG: Map state is \(mapState)")
         
         switch mapState {
         case .noInput:
@@ -44,8 +42,7 @@ struct UberMapViewRepresentable: UIViewRepresentable {
         case .searchingForLocation:
             break
         case .locationSelected:
-            if let coordinate = locationViewModel.selectedLocationCoordinate {
-                print("DEBUG: Coordinate is \(coordinate)")
+            if let coordinate = locationViewModel.selectedUberLocation?.coordinate {
                 context.coordinator.addAndSelectAnnotation(withCoordinate: coordinate)
                 context.coordinator.configurePolyline(withDestination: coordinate)
             }
@@ -125,43 +122,13 @@ extension UberMapViewRepresentable {
         
         func configurePolyline(withDestination coordinate: CLLocationCoordinate2D) {
             guard let userLocationCoordinate = self.userLocationCoordinate else {return}
-            getDestinationRoute(from: userLocationCoordinate, to: coordinate) { route in
+            parent.locationViewModel.getDestinationRoute(from: userLocationCoordinate, to: coordinate) { route in
                 self.parent.mapView.addOverlay(route.polyline)
                 let rect = self.parent.mapView.mapRectThatFits(route.polyline.boundingMapRect, edgePadding: .init(top: 64, left: 32, bottom: 500, right: 32))
                 self.parent.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
             }
         }
         
-        
-        /// This function fetches the directions from the users location to the destination
-        ///
-        /// ```
-        /// It utilises a MKPlaceMark object to fetch a route from the users location and their destination. Upon completion, it executes a completion handler.
-        /// ```
-        /// - Parameters:
-        ///     -from: An CLLocationCoordinate2D object, the user's location
-        ///     -to: A CLLocationCoordinate2D, the user's destination
-        ///
-        /// - Returns: A result (route) and an error
-        ///
-        func getDestinationRoute(from userLocation: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D, completion: @escaping(MKRoute) -> Void ) {
-            let destinationPlacemark = MKPlacemark(coordinate: destination)
-            let userPlacemark = MKPlacemark(coordinate: userLocation)
-            let request = MKDirections.Request()
-            request.source = MKMapItem(placemark: userPlacemark)
-            request.destination = MKMapItem(placemark: destinationPlacemark)
-            let directions = MKDirections(request: request)
-            directions.calculate { response, error in
-                //handle error
-                if let error = error {
-                    print("DEBUG failed to get directions with errorr \(error.localizedDescription)")
-                    return
-                }
-                
-                guard let route = response?.routes.first else {return}
-                completion(route)
-            }
-        }
         
         func clearMapViewAndRecentreOnMapLocation() {
             parent.mapView.removeAnnotations(parent.mapView.annotations)

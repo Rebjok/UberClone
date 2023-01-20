@@ -42,7 +42,7 @@ struct MapViewActionButton: View {
         case .searchingForLocation:
             mapState = .noInput
         case.locationSelected:
-            viewModel.selectedLocationCoordinate = nil
+            viewModel.selectedUberLocation = nil
             mapState = .noInput
         }
     }
