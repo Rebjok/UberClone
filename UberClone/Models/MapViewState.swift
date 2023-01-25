@@ -12,6 +12,7 @@ enum MapViewState {
     case locationSelected
     case searchingForLocation
     case polylineAdded
+    case sideMenuOpened
 }
 
 

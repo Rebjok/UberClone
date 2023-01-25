@@ -36,6 +36,10 @@ struct HomeView: View {
                     .padding(.top,4)
             }
             
+            if mapState == .sideMenuOpened {
+                SideMenuView(mapState: $mapState)
+            }
+            
             if mapState == .locationSelected || mapState == .polylineAdded {
                 RideRequestView()
                     .transition(.move(edge: .bottom))
