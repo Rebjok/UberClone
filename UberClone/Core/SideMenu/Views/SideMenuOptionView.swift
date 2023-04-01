@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct SideMenuOptionView: View {
+    var sideMenuOptionType : SideMenuOption
+    
     var body: some View {
         HStack(spacing: 16) {
-            Image(systemName: "briefcase")
+            Image(systemName: sideMenuOptionType.image)
                 .resizable()
                 .scaledToFit()
                 .clipped()
@@ -18,7 +20,7 @@ struct SideMenuOptionView: View {
                 .font(.system(size:14,weight:.ultraLight))
                 .foregroundColor(.primary)
             
-            Text("Payments")
+            Text(sideMenuOptionType.name)
                 .font(.system(size:16,weight:.light))
             
             Spacer()
@@ -30,6 +32,6 @@ struct SideMenuOptionView: View {
 
 struct SideMenuOptionView_Previews: PreviewProvider {
     static var previews: some View {
-        SideMenuOptionView()
+        SideMenuOptionView(sideMenuOptionType: .payments)
     }
 }

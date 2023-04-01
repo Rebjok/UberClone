@@ -10,6 +10,7 @@ import SwiftUI
 struct RideRequestView: View {
     @State private var selectedRideType: RideType = .uberX
     @EnvironmentObject var locationViewModel: LocationSearchViewModel
+    private var viewModel: RideRequestViewModel = RideRequestViewModel()
     
     var body: some View {
         VStack {
@@ -95,7 +96,8 @@ struct RideRequestView: View {
                         }
                         .frame(width:112, height: 140)
                         .foregroundColor(type == selectedRideType ? .white : Color.theme.primaryTextColor)
-                        .background(type == selectedRideType ? .blue : Color.theme.secondaryBackgroundColor)
+                        .background(type == selectedRideType ? Color.theme.DashPrimary : Color.theme.secondaryBackgroundColor)
+//                        "#65F6A1"
                         .scaleEffect(type == selectedRideType ? 1.2 : 1.0)
                         .cornerRadius(10)
                         .onTapGesture{
@@ -112,37 +114,42 @@ struct RideRequestView: View {
                 .padding(.vertical, 8)
             
             //payment option view
-            HStack(spacing: 12){
-                Text("Visa")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .padding(6)
-                    .background(.blue)
-                    .cornerRadius(4)
-                    .foregroundColor(.white)
-                    .padding(.leading)
-                
-                Text("**** 1234")
-                    .fontWeight(.bold)
-                
-                Spacer()
-                
-                Image(systemName: "chevron.right")
-                    .imageScale(.medium)
-                    .padding()
+            Button {
+                viewModel.paymentClicked()
+            } label: {
+                HStack(spacing: 12){
+                    Text("Visa")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .padding(6)
+                        .background(.blue)
+                        .cornerRadius(4)
+                        .foregroundColor(.white)
+                        .padding(.leading)
+                    
+                    Text("**** 1234")
+                        .fontWeight(.bold)
+                        .foregroundColor(.black)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .imageScale(.medium)
+                        .padding()
+                }
+                .background(Color.theme.secondaryBackgroundColor)
+                .cornerRadius(10)
+                .padding(.horizontal)
             }
-            .background(Color.theme.secondaryBackgroundColor)
-            .cornerRadius(10)
-            .padding(.horizontal)
             
             //request ride button
             Button {
-                
+                viewModel.requestRide()
             } label: {
                 Text("CONFIRM RIDE")
                     .fontWeight(.bold)
                     .frame(width: UIScreen.main.bounds.width - 32, height: 50)
-                    .background(.blue)
+                    .background(Color.theme.DashPrimary)
                     .cornerRadius(10)
                     .foregroundColor(.white)
             }

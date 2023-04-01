@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SideMenuView: View {
     @Binding var mapState : MapViewState
+    var viewModel: SideMenuViewModel = SideMenuViewModel()
     
     var body: some View {
         ZStack {
@@ -35,8 +36,18 @@ struct SideMenuView: View {
 
                         //Option Cells
                         VStack{
-                            ForEach( 0..<6) {_ in
-                                SideMenuOptionView()
+                            ForEach( SideMenuOption.allCases, id: \.self) {type in
+                                Button {
+                                    switch type{
+                                    case .payments: viewModel.payments()
+                                    case .promotions: viewModel.promotions()
+                                    case .myRides: viewModel.myRides()
+                                    case .support: viewModel.support()
+                                    case .about: viewModel.about()
+                                    }
+                                } label: {
+                                    SideMenuOptionView(sideMenuOptionType: type)
+                                }
                             }
                         }
                         .padding(.vertical)
@@ -52,7 +63,7 @@ struct SideMenuView: View {
                                 Spacer()
                                 
                                 Button {
-                                    
+                                    viewModel.becomeADriver() 
                                 } label: {
                                     VStack(alignment: .leading){
                                         Text("Become a Driver")

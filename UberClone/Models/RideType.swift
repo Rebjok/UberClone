@@ -16,9 +16,9 @@ enum RideType: Int, CaseIterable, Identifiable {
     
     var description: String {
         switch self{
-        case .uberX: return "UberX"
-        case .uberBlack: return "UberBlack"
-        case .uberXL: return "UberXL"
+        case .uberX: return "DashX"
+        case .uberBlack: return "DashBlack"
+        case .uberXL: return "DashXL"
         }
     }
     
